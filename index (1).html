@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>منصة الاستدامة الرقمية | إياد محمد فتحي</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<style>
+:root{--primary:#059669;--secondary:#10b981;--accent:#f59e0b;--bg:#f0fdf4;--dark:#064e3b;--text:#374151;--shadow:0 10px 30px rgba(0,0,0,.1)}
+.royal-blue{--primary:#1e40af;--secondary:#3b82f6;--bg:#eff6ff;--dark:#1e3a8a}
+.deep-purple{--primary:#6d28d9;--secondary:#8b5cf6;--bg:#f5f3ff;--dark:#4c1d95}
+.ruby-red{--primary:#be123c;--secondary:#fb7185;--bg:#fff1f2;--dark:#881337}
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--text);line-height:1.8;transition:.5s}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+button,input{font-family:inherit}
+header{background:linear-gradient(135deg,var(--primary),var(--dark));color:#fff;padding:70px 5% 110px;text-align:center;clip-path:polygon(0 0,100% 0,100% 88%,0 100%)}
+#clock{background:rgba(255,255,255,.2);padding:8px 22px;border-radius:50px;display:inline-block;font-weight:900;font-size:1.3rem;margin-bottom:15px;direction:ltr}
+.bar{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:18px}
+.btn{padding:9px 22px;background:var(--primary);color:#fff;border:0;border-radius:10px;cursor:pointer;font-weight:700}
+.btn.w{background:#fff;color:var(--dark)}
+.sec{background:#fff;border-radius:30px;padding:40px 5%;margin:30px 4%;box-shadow:var(--shadow);border-top:12px solid var(--primary)}
+.sec:first-of-type{margin-top:-50px;position:relative}
+.sec h2{text-align:center;color:var(--dark);margin-bottom:25px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:25px}
+.card{background:#fff;border-radius:22px;overflow:hidden;border:1px solid #e5e7eb;display:flex;flex-direction:column}
+.card img{width:100%;height:200px;object-fit:cover;background:#d1fae5}
+.card div{padding:20px;text-align:center;flex-grow:1}
+.card h3{color:var(--primary)}
+.src{font-size:.8rem;color:var(--dark);font-weight:700;border:1px solid var(--secondary);padding:2px 10px;border-radius:20px;display:inline-block;margin-top:8px}
+.q-item{background:#f8fafc;padding:20px;border-radius:18px;border-right:8px solid var(--primary)}
+.opt-btn{width:100%;padding:10px;margin:5px 0;border:2px solid var(--primary);background:#fff;border-radius:10px;cursor:pointer;font-weight:700}
+.correct{background:var(--primary)!important;color:#fff!important}.wrong{background:#b91c1c!important;color:#fff!important}
+label{display:block;font-weight:700;margin-top:10px}
+input{width:100%;padding:10px;border:2px solid #cbd5e1;border-radius:10px;margin-top:4px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:25px}
+.stat{background:var(--bg);border-radius:18px;padding:15px;text-align:center}
+.stat b{display:block;font-size:2rem;color:var(--primary)}
+.cv{position:relative;height:260px}
+table{width:100%;border-collapse:collapse;text-align:center}
+.lbr{display:flex;align-items:center;gap:12px;background:var(--bg);border-radius:16px;padding:10px 14px;margin:8px 0}.lbr .rk{font-size:1.6rem;min-width:40px;text-align:center}.lbr .nm{flex:1;font-weight:700;overflow-wrap:anywhere}.lbr .sc{font-weight:900;color:var(--primary);direction:ltr}.lbar{display:block;height:6px;border-radius:6px;background:var(--secondary);margin-top:4px}
+th,td{padding:10px;border-bottom:1px solid #e5e7eb}th{background:var(--primary);color:#fff}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:9999;align-items:center;justify-content:center;padding:15px}
+.mb{background:#fff;padding:30px;border-radius:25px;text-align:center;max-width:420px;width:100%}
+.themes{position:fixed;left:10px;bottom:20px;background:#fff;padding:8px 10px;border-radius:25px;display:flex;gap:8px;box-shadow:var(--shadow);z-index:2000}
+.themes button{width:24px;height:24px;border-radius:50%;border:3px solid #fff;cursor:pointer}
+.wa{position:fixed;right:15px;bottom:20px;width:55px;height:55px;border-radius:50%;background:#25d366;color:#fff;display:flex;align-items:center;justify-content:center;font-size:1.6rem;z-index:2000;text-decoration:none}
+.err{color:#b91c1c;font-weight:700;min-height:1.6em}
+#map{background:#e8f5e9;height:380px;border-radius:18px;margin:15px 0;z-index:1}.sp{margin-top:8px;cursor:pointer;padding:4px 14px;border-radius:20px;border:2px solid var(--primary);background:#fff;color:var(--primary);font-weight:700}
+.skip{position:absolute;top:-60px;right:10px;background:#fff;color:#000;padding:8px 14px;z-index:10000;border-radius:8px}.skip:focus{top:10px}
+footer{background:var(--dark);color:#fff;text-align:center;padding:35px 5% 110px}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body id="app">
+<a href="#g1" class="skip">تخطَّ إلى المحتوى</a>
+<div class="themes" role="group" aria-label="تغيير الألوان">
+<button style="background:#059669" aria-label="أخضر" onclick="th('')"></button>
+<button style="background:#1e40af" aria-label="أزرق" onclick="th('royal-blue')"></button>
+<button style="background:#6d28d9" aria-label="بنفسجي" onclick="th('deep-purple')"></button>
+<button style="background:#be123c" aria-label="أحمر" onclick="th('ruby-red')"></button>
+</div>
+<a class="wa" id="wa" href="https://wa.me/201025113314" target="_blank" rel="noopener noreferrer" aria-label="واتساب">💬</a>
+
+<header>
+<div id="clock" aria-hidden="true">00:00:00</div>
+<h1>منصة الاستدامة الرقمية</h1>
+<p style="font-size:1.3rem;font-weight:600">قِس بصمتك الكربونية، وتعلّم، وتابع أثرك</p>
+<p>إياد محمد فتحي — مدرسة سميح السعيد الرياضية، أسيوط</p>
+<div class="bar">
+<span id="who" style="align-self:center;font-weight:700"></span>
+<button class="btn w" id="authBtn" onclick="authBtn()">تسجيل الدخول</button>
+<button class="btn w" onclick="fs(1)" aria-label="تكبير الخط">أ+</button>
+<button class="btn w" onclick="fs(-1)" aria-label="تصغير الخط">أ-</button>
+</div>
+</header>
+
+<main>
+<section class="sec"><h2>حقائق الاستدامة</h2><div class="grid" id="g1"></div></section>
+<section class="sec"><h2>♻️ دليل التدوير والعلوم البيئية</h2><div class="grid" id="g2"></div></section>
+
+<section class="sec" id="calc"><h2>🧮 احسب بصمتك الكربونية الشهرية</h2>
+<div class="grid">
+<div>
+<label for="k1">استهلاك الكهرباء (كيلوواط ساعة / شهر)</label><input id="k1" type="number" min="0" value="200">
+<label for="k2">استهلاك المياه (متر مكعب / شهر)</label><input id="k2" type="number" min="0" value="15">
+<label for="k3">مشاوير السيارة (كم / أسبوع)</label><input id="k3" type="number" min="0" value="40">
+<label for="k4">النفايات المرمية (كجم / أسبوع)</label><input id="k4" type="number" min="0" value="7">
+<label for="k5">وجبات اللحوم (وجبة / أسبوع)</label><input id="k5" type="number" min="0" value="5">
+<button class="btn" style="margin-top:15px" onclick="calc()">احسب وسجّل النتيجة</button>
+</div>
+<div id="out" aria-live="polite"><p>أدخل بياناتك واضغط «احسب». سنعرض لك نتيجتك ونصيحة مخصصة.</p></div>
+</div>
+<p style="font-size:.85rem;margin-top:15px">معامل الكهرباء 0.40 كجم CO₂/ك.و.س لمصر (المصدر: IEA 2025). أما بقية المعاملات فهي تقديرات تقريبية للتوعية: مياه 0.34 كجم/م³، سيارة 0.17 كجم/كم، نفايات 0.5 كجم/كجم، وجبة لحوم 3 كجم. متوسط انبعاثات الفرد في مصر ≈ 2.5 طن CO₂ سنويًا (2024، المصدر: TheGlobalEconomy).</p>
+</section>
+
+<section class="sec" id="quiz"><h2>تحدي المعرفة (20 سؤالًا)</h2>
+<div class="grid" id="qs"></div>
+<div style="text-align:center;margin-top:20px"><button class="btn" onclick="buildQuiz()">إعادة الاختبار</button></div></section>
+
+<section class="sec" id="dash"><h2>📊 لوحة المعلومات</h2>
+<div class="stats" id="stats"></div>
+<div class="grid">
+<div><h3>توزيع آخر بصمة لك (كجم CO₂/شهر)</h3><div class="cv"><canvas id="c1" role="img" aria-label="رسم دائري لتوزيع البصمة"></canvas></div><p id="e1" style="text-align:center;color:#6b7280"></p></div>
+<div><h3>تطور بصمتك عبر الزمن</h3><div class="cv"><canvas id="c2" role="img" aria-label="رسم خطي لتطور البصمة"></canvas></div><p id="e2" style="text-align:center;color:#6b7280"></p></div>
+</div>
+<h3 style="margin-top:25px">لوحة الصدارة (أفضل نتائج الاختبار)</h3><div id="lb"></div>
+</section>
+
+<section class="sec" id="admin" style="display:none"><h2>🛡️ لوحة مدير النظام</h2>
+<div class="grid">
+<div><h3>إضافة حقيقة جديدة</h3>
+<label for="a1">العنوان</label><input id="a1" maxlength="80"><label for="a2">الوصف</label><input id="a2" maxlength="300">
+<label for="a3">المصدر</label><input id="a3"><label for="a4">رابط صورة (اختياري، https)</label><input id="a4" dir="ltr">
+<button class="btn" style="margin-top:12px" onclick="addFact()">إضافة</button>
+<button class="btn" style="margin-top:12px" onclick="csv()">تصدير النتائج CSV</button></div>
+<div><h3>المستخدمون المسجلون</h3><div id="ul"></div></div>
+</div></section>
+
+<section class="sec" id="about"><h2>📘 عن المشروع</h2><div class="grid">
+<article class="card"><div style="text-align:right"><h3>المشكلة</h3><p>كثيرون لا يعرفون أثر استهلاكهم اليومي من الكهرباء والمياه والنقل والنفايات على المناخ، ونحتاج أداة عربية بسيطة تجمع القياس والتعلم والمتابعة.</p></div></article>
+<article class="card"><div style="text-align:right"><h3>الفئة المستهدفة</h3><p>الطلاب والأسر في مصر، وكل من يريد معرفة بصمته الكربونية وتقليلها.</p></div></article>
+<article class="card"><div style="text-align:right"><h3>آلية العمل</h3><p>تسجّل دخولك، وتحسب بصمتك، وتتعلم من الحقائق والاختبار، وتتابع تطورك في لوحة المعلومات، وتضيف نقاط تدوير على الخريطة.</p></div></article>
+<article class="card"><div style="text-align:right"><h3>الأدوات والتقنيات</h3><p>HTML وCSS وJavaScript، ومكتبة Chart.js للرسوم، وLeaflet وOpenStreetMap للخريطة، وواجهة Web Speech للقراءة الصوتية، وقاعدة بيانات LocalStorage مع ربط سحابي بـ Supabase (PostgreSQL).</p></div></article>
+<article class="card"><div style="text-align:right"><h3>مصادر البيانات</h3><p>معامل كهرباء مصر من IEA 2025، ومتوسط انبعاثات الفرد من TheGlobalEconomy، ولكل حقيقة مصدرها على بطاقتها.</p></div></article>
+<article class="card"><div style="text-align:right"><h3>المطوّر</h3><p>إياد محمد فتحي، مدرسة سميح السعيد الرياضية، أسيوط.</p></div></article>
+</div></section>
+<section class="sec" id="ip"><h2>⚖️ الملكية الفكرية والإفصاح عن الذكاء الاصطناعي</h2><div class="grid">
+<article class="card"><div style="text-align:right"><h3>أدوات الذكاء الاصطناعي</h3><p>استُخدم المساعد Claude من شركة Anthropic في مراجعة الكود واقتراح التحسينات الأمنية وتحسين إمكانية الوصول.</p></div></article>
+<article class="card"><div style="text-align:right"><h3>المكتبات والتراخيص</h3><p><bdi dir="ltr">Chart.js</bdi> (MIT)، <bdi dir="ltr">Leaflet</bdi> (BSD-2)، بيانات الخريطة © مساهمو <bdi dir="ltr">OpenStreetMap</bdi> (ODbL)، خط Cairo (SIL OFL)، و<bdi dir="ltr">Supabase</bdi> اختياري (Apache-2.0).</p></div></article>
+</div></section>
+<section class="sec" id="vid" style="display:none"><h2>🎬 فيديو المشروع</h2><div id="vbox"></div></section>
+<section class="sec" id="mapSec"><h2>🗺️ خريطة نقاط التدوير</h2>
+<p style="text-align:center">انقر على الخريطة لاختيار موقع نقطة تدوير تعرفها، ثم اكتب اسمها ونوعها.</p>
+<div id="map" role="application" aria-label="خريطة نقاط التدوير"></div>
+<p id="mapNote" style="font-size:.85rem;text-align:center">إن لم تظهر صور الخريطة فافتح الموقع في المتصفح مباشرة، فبعض المعاينات تحجب الصور الخارجية. اختيار المواقع وإضافة النقاط يعمل في كل الأحوال.</p><div id="plist"></div>
+<div class="grid"><div><label for="pn">اسم النقطة</label><input id="pn" maxlength="60"></div><div><label for="pt">النوع</label><input id="pt" maxlength="30" placeholder="ورق / بلاستيك / بطاريات / إلكترونيات"></div></div>
+<button class="btn" style="margin-top:12px" onclick="addPoint()">إضافة النقطة (يلزم تسجيل الدخول)</button><p class="err" id="pe"></p></section>
+<section class="sec"><h2>مقارنة مع الأعمال المشابهة</h2>
+<div class="grid"><article class="card"><div style="text-align:right"><h3 dir="auto">حاسبة البصمة الكربونية للأمم المتحدة</h3><p><b>الفئة:</b> أفراد وأسر</p><p><b>ما يقدمه:</b> حساب البصمة السنوية</p><p><b>ما تضيفه منصتنا:</b> تجمع الحساب مع التعلم والاختبار ولوحة الصدارة والخريطة في مكان واحد بالعربية</p></div></article><article class="card"><div style="text-align:right"><h3 dir="auto">حاسبة انبعاثات SeaRates</h3><p><b>الفئة:</b> شركات الشحن واللوجستيات</p><p><b>ما يقدمه:</b> انبعاثات النقل البحري والجوي والبري والسكك الحديدية</p><p><b>ما تضيفه منصتنا:</b> موجهة للحياة اليومية للأفراد والطلاب</p></div></article><article class="card"><div style="text-align:right"><h3 dir="auto">حاسبة البصمة لبنك أبوظبي التجاري مصر (مع Masader)</h3><p><b>الفئة:</b> الشركات</p><p><b>ما يقدمه:</b> قياس انبعاثات النطاقين 1 و2</p><p><b>ما تضيفه منصتنا:</b> مجانية للأفراد، وتستخدم معامل كهرباء خاصًا بمصر</p></div></article><article class="card"><div style="text-align:right"><h3 dir="auto">Leafy AI (مشروع في مسابقة Google AI)</h3><p><b>الفئة:</b> مستخدمون عامة</p><p><b>ما يقدمه:</b> حاسبة بأسئلة وأجوبة ومساعد ذكاء اصطناعي ومكافآت</p><p><b>ما تضيفه منصتنا:</b> محتوى بيئي موثق بمصادر، وخريطة تدوير يضيفها المستخدمون، ولوحة مدير، وأدوات مفتوحة المصدر</p></div></article></div>
+<p style="font-size:.85rem;margin-top:10px">آخر اطلاع على هذه الأعمال: أكتوبر 2026.</p>
+</section>
+</main>
+
+<div class="modal" id="authM" role="dialog" aria-modal="true" aria-label="تسجيل الدخول"><div class="mb">
+<h2>الدخول أو إنشاء حساب</h2>
+<label for="au">اسم المستخدم</label><input id="au" maxlength="30" autocomplete="username">
+<label for="ap">كلمة المرور (6 أحرف على الأقل)</label><input id="ap" type="password" autocomplete="current-password">
+<p class="err" id="ae"></p>
+<button class="btn" onclick="auth(0)">دخول</button> <button class="btn" onclick="auth(1)">حساب جديد</button>
+<button class="btn" style="background:#6b7280" onclick="$('authM').style.display='none'">إلغاء</button>
+</div></div>
+
+<div class="modal" id="sm" role="dialog" aria-modal="true"><div class="mb">
+<span style="font-size:4rem" aria-hidden="true">🏅</span>
+<h2 id="fs" style="font-size:2.5rem;margin:15px 0"></h2><p id="fm"></p>
+<button class="btn" style="margin-top:15px" onclick="$('sm').style.display='none';location.hash='dash'">عرض لوحة الصدارة</button>
+</div></div>
+
+<footer>
+<p>تصميم وتطوير الطالب: إياد محمد فتحي © 2026</p>
+<p style="font-size:.85rem;margin-top:8px;text-align:center">المكتبات المفتوحة المصدر المستخدمة:<br><bdi dir="ltr">Chart.js</bdi> • <bdi dir="ltr">Leaflet</bdi> • <bdi dir="ltr">OpenStreetMap</bdi></p>
+<p style="font-size:.85rem;margin-top:8px;text-align:center">للتواصل عبر واتساب: <bdi dir="ltr">01025113314</bdi></p>
+</footer>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+/* قاعدة بيانات محلية (LocalStorage): users, logs, facts, me */
+const DB={g(k,d){try{return JSON.parse(localStorage.getItem('eco_'+k))??d}catch(e){return d}},s(k,v){try{localStorage.setItem('eco_'+k,JSON.stringify(v))}catch(e){}}};
+const hx=a=>[...a].map(b=>b.toString(16).padStart(2,'0')).join('');
+const HX=async(p,s)=>hx(new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s+':'+p))));
+const salt=()=>hx(crypto.getRandomValues(new Uint8Array(12)));
+let users=DB.g('users',[]);
+if(!Array.isArray(users)||!users.every(x=>x.s))users=[];
+(async()=>{if(!users.some(x=>x.r==='admin')){const s=salt();users.unshift({u:'admin',s,p:await HX('Admin@2026',s),r:'admin'});DB.s('users',users);render()}})();
+let me=DB.g('me',null),logs=DB.g('logs',[]),extra=DB.g('facts',[]),points=DB.g('points',[]);
+me=me&&users.find(x=>x.u===me.u)?{u:me.u,r:users.find(x=>x.u===me.u).r}:null;
+/* قاعدة بيانات سحابية Supabase: ضع الرابط والمفتاح العام هنا (انظر setup.sql). إن تُركا فارغين تعمل القاعدة محليًا. */
+const VIDEO_URL=''; /* رابط تضمين الفيديو، مثل https://www.youtube.com/embed/XXXX */
+const SB_URL='',SB_KEY='';
+const SB={on:!!(SB_URL&&SB_KEY),async q(t,m,b,qs){if(!SB.on)return;try{const r=await fetch(SB_URL+'/rest/v1/'+t+(qs||''),{method:m||'GET',headers:{apikey:SB_KEY,Authorization:'Bearer '+SB_KEY,'Content-Type':'application/json',Prefer:'return=minimal'},body:b?JSON.stringify(b):undefined});return m&&m!=='GET'?r.ok:await r.json()}catch(e){}}};
+async function pull(){if(!SB.on)return;
+ const[l,f,p]=await Promise.all(['logs','facts','points'].map(t=>SB.q(t)));
+ if(Array.isArray(l))logs=l;if(Array.isArray(f))extra=f.map(x=>[x.t,x.d,x.s,(/^https:\/\//.test(x.img||'')?x.img:''),x.id]);if(Array.isArray(p))points=p;
+ render();drawPts()}
+function say(b){
+ const L0='🔊 استمع',reset=(m,t)=>{b.innerText=m;setTimeout(()=>b.innerText=L0,t||4000)};
+ if(!('speechSynthesis' in window))return reset('القراءة غير مدعومة في هذا المتصفح');
+ const t=[...b.parentNode.querySelectorAll('h3,p')].map(e=>e.innerText).join('. ');
+ const v=speechSynthesis.getVoices().find(x=>/^ar/i.test(x.lang));
+ speechSynthesis.cancel();
+ const u=new SpeechSynthesisUtterance(t);u.lang=v?v.lang:'ar-SA';if(v)u.voice=v;
+ let ok=0;u.onstart=()=>{ok=1;b.innerText='⏹ جارٍ القراءة...'};u.onend=()=>b.innerText=L0;
+ u.onerror=()=>reset('لا يوجد صوت عربي في جهازك. ثبّته من إعدادات النطق (Text-to-speech)',7000);
+ speechSynthesis.speak(u);
+ setTimeout(()=>{if(!ok){speechSynthesis.cancel();reset('لا يوجد صوت عربي في جهازك. ثبّته من إعدادات النطق (Text-to-speech)',7000)}},3000)}
+try{speechSynthesis.getVoices()}catch(e){}
+let map,pick,mk=[];
+function initMap(){if(typeof L==='undefined'||map)return;map=L.map('map').setView([27.18,31.18],11);
+ const t1=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'© OpenStreetMap'}).addTo(map);let sw=0;
+ t1.on('tileerror',()=>{if(sw)return;sw=1;map.removeLayer(t1);L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'© OpenStreetMap © CARTO'}).on('tileerror',()=>{$('mapNote').style.color='#b91c1c'}).addTo(map)});
+ setTimeout(()=>map.invalidateSize(),600);addEventListener('load',()=>map.invalidateSize());
+ map.on('click',e=>{pick=e.latlng;$('pe').innerText='تم اختيار الموقع، أكمل البيانات واضغط إضافة.'})}
+function drawPts(){$('plist').innerHTML=points.length?'<h3>النقاط المضافة</h3>'+points.map(p=>`<div class="lbr"><span class="rk">📍</span><div class="nm">${esc(p.name)}<small style="display:block;font-weight:400">${esc(p.type||'')}</small></div></div>`).join(''):'';if(!map)return;mk.forEach(m=>m.remove());mk=points.map(p=>L.circleMarker([p.lat,p.lng],{radius:9,color:'#059669',fillOpacity:.8}).addTo(map).bindPopup(esc(p.name)+' — '+esc(p.type)))}
+function addPoint(){if(!me)return $('pe').innerText='سجّل دخولك أولًا.';const n=$('pn').value.trim().slice(0,60);if(!n||!pick)return $('pe').innerText='اختر موقعًا على الخريطة واكتب الاسم.';if(pick.lat<21||pick.lat>32||pick.lng<24||pick.lng>37)return $('pe').innerText='اختر موقعًا داخل مصر.';
+ const p={id:Date.now(),name:n,type:$('pt').value.trim().slice(0,30),lat:pick.lat,lng:pick.lng,u:me.u};points.push(p);DB.s('points',points);SB.q('points','POST',p);
+ pick=null;$('pn').value='';$('pt').value='';$('pe').innerText='تمت إضافة النقطة.';drawPts()}
+
+setInterval(()=>$('clock').innerText=new Date().toLocaleTimeString('en-US'),1000);
+const th=t=>$('app').className=t;
+let fz=100;const fs=n=>{fz=Math.min(140,Math.max(80,fz+n*10));document.documentElement.style.fontSize=fz+'%'};
+
+const B='https://i.ibb.co/';
+const F=[
+["الطاقة الشمسية","تستقبل الأرض في ساعة واحدة طاقة شمسية تكفي احتياجات العالم لعام كامل، وهي مفتاح تقليل الاحتباس الحراري.","وكالة الطاقة الدولية (IEA)","zH5rQV3g/1.jpg"],
+["نظام الغابات","تعمل الغابات المطيرة كأكبر بالوعة للكربون، حيث تمتص 2.1 مليار طن من ثاني أكسيد الكربون سنوياً من الجو.","منظمة الفاو (FAO)","DDTQqsDc/2.jpg"],
+["الأمن المائي","يعيش 2.3 مليار شخص في بلدان تعاني من الإجهاد المائي، مما يجعل تحلية المياه والترشيد ضرورة وجودية.","الأمم المتحدة للمياه","NXZmJzx/3.jpg"],
+["طاقة الرياح","توربينة واحدة حديثة يمكنها توليد كهرباء تكفي 1500 منزل سنوياً دون أي انبعاثات كربونية ضارة.","المجلس العالمي لطاقة الرياح","xtZTJ1nv/4.jpg"],
+["الاقتصاد الدائري","إعادة التدوير توفر 95% من الطاقة اللازمة لإنتاج المعادن من موادها الخام الأولية، مما يحمي المناخ.","وكالة حماية البيئة (EPA)","S4KzL4Bp/5.jpg"],
+["المدن الذكية","التحضر الأخضر يقلل من استهلاك الطاقة في المدن بنسبة 30% من خلال التصميمات الموفرة والمساحات النباتية.","الأمم المتحدة للمستوطنات البشرية","dw2rw6bK/16.jpg"],
+["النظم البحرية","تمتص المحيطات 90% من الحرارة الناتجة عن الانبعاثات، وهي المسؤولة عن إنتاج 50% من أكسجين الكوكب.","الإدارة الوطنية للمحيطات (NOAA)","gZZPZ3Q7/7.jpg"],
+["الزراعة المستدامة","الزراعة العضوية تعزز التنوع البيولوجي بنسبة 30% وتحسن قدرة التربة على احتجاز الكربون والمياه.","الاتحاد الدولي للزراعة العضوية","Xf5CBxH8/18.jpg"],
+["البصمة الكربونية","متوسط البصمة الكربونية العالمية للفرد هو 4 أطنان سنوياً؛ لنتجنب كارثة مناخية يجب أن تنخفض لـ 2 طن.","بروتوكول الغازات الدفيئة","qY6XmK1w/19.jpg"],
+["التكنولوجيا الخضراء","الذكاء الاصطناعي قادر على تقليل انبعاثات غازات الاحتباس الحراري بنسبة 4% بحلول عام 2030 عبر كفاءة الطاقة.","مايكروسوفت والبيئة","Z6v7fdSB/20.jpg"]];
+const R=[
+["الزجاج القابل لإعادة التدوير","الزجاج لا يتحلل عمليًا، ويمكن إعادة تدويره مرات كثيرة جدًا دون فقدان في النقاء أو القوة.","اتحاد الزجاج الأوروبي","YT86Pj95/11.jpg"],
+["ألياف الورق","تدوير طن من الورق ينقذ 17 شجرة ويوفر 26,500 لتر من الماء المخصص لعمليات التصنيع الأولية.","معهد صناعات التدوير","sJz93Z6x/12.jpg"],
+["مخلفات الليثيوم","بطارية هاتف واحدة تحتوي على معادن ثقيلة تلوث كميات كبيرة من المياه الجوفية إذا لم تدوّر.","المؤتمر الدولي لتدوير البطاريات","CsSmhbCh/15.jpg"],
+["السماد الحيوي","تمثل المخلفات العضوية 30% مما نلقيه؛ تحويلها لسماد يقلل غاز الميثان المنبعث من المكبات.","تحالف السماد العالمي","1YD9K1K8/14.jpg"],
+["أزمة البلاستيك","تستهلك الأكياس البلاستيكية ثانية لإنتاجها و12 دقيقة لاستخدامها، لكنها تعيش 500 عام في بيئتنا.","برنامج الأمم المتحدة للبيئة","mr9581vM/13.jpg"],
+["المناجم الحضرية","تحتوي الإلكترونيات على ذهب ونحاس بتركيز أعلى 50 مرة من الخام المستخرج من المناجم الطبيعية.","مرصد النفايات الإلكترونية","66Xpw4b/8.jpg"],
+["الوقود الحيوي","الزيوت المستعملة هي كنز طاقة؛ تحويلها لوقود حيوي يقلل انبعاثات ثاني أكسيد الكربون بنسبة 85%.","مجلس الوقود الحيوي","p65dCvbv/17.jpg"],
+["فرز النفايات","فصل النفايات في المنزل يزيد من كفاءة عملية التدوير بنسبة 60% ويقلل من تكلفة معالجة التلوث.","الجمعية الدولية للنفايات الصلبة","N6KS5xrt/6.jpg"],
+["الألمنيوم الأخضر","علبة ألمنيوم واحدة يعاد تدويرها توفر طاقة كافية لتشغيل تلفاز لمدة 3 ساعات كاملة.","معهد الألمنيوم العالمي","k2SwXdj7/9.jpg"],
+["استدامة النسيج","تستهلك صناعة الأزياء 93 مليار متر مكعب من الماء سنوياً؛ التدوير هو الحل الوحيد للأمن المائي.","مؤسسة إلين مكارثر","7JKwrcZ6/10.jpg"]];
+const Q=[["ما هو الغاز الرئيسي المسبب للاحتباس الحراري؟","ثاني أكسيد الكربون","الأكسجين"],["أي مصدر طاقة لا ينضب أبداً؟","الشمس","البترول"],["كم سنة يحتاج البلاستيك ليختفي تماماً؟","500 عام","سنة واحدة"],["تعتبر رئة الأرض لامتصاصها الكربون:","الغابات","الصحاري"],["تدوير طن من الورق ينقذ كم شجرة؟","17 شجرة","شجرة واحدة"],["للحفاظ على الماء في المنزل يجب:","إصلاح التسريبات","فتح الصنبور بقوة"],["المصدر الرئيسي للأكسجين في الجو هو:","النباتات والطحالب","المصانع"],["المادة التي تدوّر مرارًا دون فقد جودتها:","الزجاج","البلاستيك"],["وظيفة طبقة الأوزون هي الحماية من:","الأشعة فوق البنفسجية","الرياح القوية"],["تحويل بقايا الطعام لسماد يسمى:","التسميد العضوي","التحلل الكيميائي"],["أي حقيبة هي الأقل ضرراً على البيئة؟","القماش","البلاستيك"],["نسبة المياه العذبة على الأرض هي تقريباً:","3%","70%"],["يجب وضع البطاريات القديمة في:","حاوية النفايات الخطرة","سلة القمامة العادية"],["الزراعة المستدامة تهدف إلى:","حفظ خصوبة التربة","استهلاك المياه بكثرة"],["تهدف المدن الخضراء إلى:","تقليل انبعاثات الكربون","زيادة عدد السيارات"],["تستخدم الرياح لتوليد طاقة:","كهربائية","كيميائية"],["البصمة الكربونية تقيس:","أثر الفرد على المناخ","مساحة الغابات"],["الاستدامة تعني الحفاظ على الموارد لـ:","الأجيال القادمة","الوقت الحالي فقط"],["أي نوع من المصابيح يوفر الطاقة أكثر؟","LED","العادية"],["تبدأ عملية التدوير الناجحة من:","فرز النفايات من المنزل","حرق النفايات"]];
+
+const card=(x,del)=>`<article class="card">${x[3]?`<img loading="lazy" alt="${esc(x[0])}" src="${esc(x[3])}" onerror="this.style.display='none'">`:''}<div><h3>${esc(x[0])}</h3><p>${esc(x[1])}</p><span class="src">المصدر: ${esc(x[2])}</span><br><button class="sp" onclick="say(this)">🔊 استمع</button>${del}</div></article>`;
+
+/* المستخدمون */
+function authBtn(){if(me){me=null;DB.s('me',null);render()}else{$('ae').innerText='';$('authM').style.display='flex';$('au').focus()}}
+async function auth(reg){
+ const u=$('au').value.trim(),p=$('ap').value,e=$('ae');
+ if(u.length<3||p.length<6)return e.innerText='اسم المستخدم 3 أحرف على الأقل وكلمة المرور 6 أحرف على الأقل.';
+ if(reg){if(users.find(x=>x.u===u))return e.innerText='اسم المستخدم مستخدم من قبل، اختر اسمًا آخر.';const s=salt();users.push({u,s,p:await HX(p,s),r:'user'});DB.s('users',users)}
+ const x=users.find(x=>x.u===u);
+ if(!x||x.p!==await HX(p,x.s))return e.innerText='بيانات الدخول غير صحيحة.';
+ me={u:x.u,r:x.r};DB.s('me',me);$('authM').style.display='none';$('ap').value='';render();
+}
+
+/* الحاسبة */
+const TIPS={'كهرباء':'استبدل المصابيح بـ LED وافصل الأجهزة غير المستخدمة.','مياه':'أصلح التسريبات واستعمل رشاشات موفرة للماء.','مواصلات':'جرّب المشي أو الدراجة أو المواصلات العامة في المشاوير القصيرة.','نفايات':'افرز النفايات من المنزل وقلل البلاستيك أحادي الاستخدام.','لحوم':'استبدل وجبتين لحوم أسبوعيًا بوجبات نباتية.'};
+function calc(){
+ const v=id=>Math.min(1e6,Math.max(0,+$(id).value||0));
+ const c={'كهرباء':v('k1')*.40,'مياه':v('k2')*.34,'مواصلات':v('k3')*4.3*.17,'نفايات':v('k4')*4.3*.5,'لحوم':v('k5')*4.3*3};
+ for(const k in c)c[k]=+c[k].toFixed(1);
+ const tot=+Object.values(c).reduce((a,b)=>a+b,0).toFixed(1),yr=(tot*12/1000).toFixed(2),top=Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0];
+ const row={u:me?me.u:'ضيف',t:'fp',v:tot,d:c,at:Date.now()};logs.push(row);DB.s('logs',logs);SB.q('logs','POST',row);
+ $('out').innerHTML=`<h3>بصمتك: ${tot} كجم CO₂ شهريًا</h3><p>≈ ${yr} طن سنويًا (المتوسط العالمي 4 أطنان، والهدف 2 طن، ومتوسط الفرد في مصر ≈ 2.5 طن).</p><p><b>أكبر مصدر:</b> ${top}. ${TIPS[top]}</p>`;
+ render();
+}
+
+/* الاختبار */
+let score=0,count=0;
+function buildQuiz(){
+ score=0;count=0;
+ $('qs').innerHTML=Q.map((x,i)=>{const o=Math.random()>.5?[x[1],x[2]]:[x[2],x[1]];
+ return `<div class="q-item" id="q${i}"><p><b>س${i+1}:</b> ${x[0]}</p>${o.map(t=>`<button class="opt-btn" onclick="chk(this,${t===x[1]},${i})">${t}</button>`).join('')}</div>`}).join('');
+}
+function chk(b,ok,i){
+ $('q'+i).querySelectorAll('button').forEach(x=>x.disabled=true);
+ b.classList.add(ok?'correct':'wrong');if(ok)score++;count++;
+ if(count===20){
+  const row={u:me?me.u:'ضيف',t:'quiz',v:score,at:Date.now()};logs.push(row);DB.s('logs',logs);SB.q('logs','POST',row);
+  $('fs').innerText=score+'/20';
+  $('fm').innerText=(score===20?'أنت بطل استدامة حقيقي!':'عمل رائع! استمر في التعلم.')+(me?'':' سجّل دخولك لتظهر نتيجتك باسمك.');
+  $('sm').style.display='flex';render();
+ }
+}
+
+/* لوحة المدير */
+function addFact(){
+ const t=$('a1').value.trim(),d=$('a2').value.trim(),s=$('a3').value.trim(),i=$('a4').value.trim();
+ if(!t||!d||!s)return alert('العنوان والوصف والمصدر مطلوبة.');
+ const x=[t,d,s,/^https:\/\//.test(i)?i:'',Date.now()];extra.push(x);DB.s('facts',extra);SB.q('facts','POST',{id:x[4],t,d,s,img:x[3]});
+ ['a1','a2','a3','a4'].forEach(x=>$(x).value='');render();
+}
+const delFact=i=>{const x=extra.splice(i,1)[0];if(x&&x[4])SB.q('facts','DELETE',null,'?id=eq.'+x[4]);DB.s('facts',extra);render()};
+function csv(){
+ const rows=['المستخدم,النوع,القيمة,التاريخ',...logs.map(l=>[l.u,l.t==='quiz'?'اختبار':'بصمة',l.v,new Date(l.at).toLocaleDateString('en-GB')].map(c=>{c=String(c);if(/^[=+\-@]/.test(c))c="'"+c;return '"'+c.replace(/"/g,'""')+'"'}).join(','))];
+ const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\ufeff'+rows.join('\n')],{type:'text/csv'}));a.download='results.csv';a.click();
+}
+
+/* العرض */
+let ch1,ch2;
+function render(){
+ const adm=me&&me.r==='admin';
+ $('who').innerText=me?'مرحبًا '+me.u+(adm?' (مدير)':''):'أنت تتصفح كضيف';$('who').innerText+=SB.on?' • قاعدة بيانات سحابية':' • قاعدة بيانات محلية';
+ $('authBtn').innerText=me?'تسجيل الخروج':'تسجيل الدخول';
+ $('g1').innerHTML=F.map(x=>card([x[0],x[1],x[2],B+x[3]],'')).join('')+extra.map((x,i)=>card(x,adm?`<br><button class="btn" style="margin-top:8px;background:#b91c1c" onclick="delFact(${i})">حذف</button>`:'')).join('');
+ $('g2').innerHTML=R.map(x=>card([x[0],x[1],x[2],B+x[3]],'')).join('');
+ $('admin').style.display=adm?'block':'none';
+ const qz=logs.filter(l=>l.t==='quiz'),fp=logs.filter(l=>l.t==='fp'),avg=a=>a.length?(a.reduce((s,l)=>s+l.v,0)/a.length).toFixed(1):'—';
+ $('stats').innerHTML=[[users.length,'مستخدم مسجل'],[qz.length,'اختبار مكتمل'],[avg(qz),'متوسط الدرجات من 20'],[avg(fp),'متوسط البصمة كجم/شهر']].map(s=>`<div class="stat"><b>${s[0]}</b>${s[1]}</div>`).join('');
+ const best={};qz.forEach(l=>best[l.u]=Math.max(best[l.u]||0,l.v));
+ const top=Object.entries(best).sort((a,b)=>b[1]-a[1]).slice(0,5);
+ $('lb').innerHTML=top.length?top.map((x,i)=>`<div class="lbr"><span class="rk">${['🥇','🥈','🥉'][i]||i+1}</span><div class="nm">${esc(x[0])}<span class="lbar" style="width:${x[1]*5}%"></span></div><span class="sc">${x[1]}/20</span></div>`).join(''):'<p>لا توجد نتائج بعد. أكمل الاختبار لتكون أول المتصدرين!</p>';
+ if(adm)$('ul').innerHTML='<div style="overflow-x:auto"><table><tr><th>المستخدم</th><th>الدور</th></tr>'+users.map(u=>`<tr><td>${esc(u.u)}</td><td>${u.r==='admin'?'مدير':'مستخدم'}</td></tr>`).join('')+'</table></div>';
+ const mine=fp.filter(l=>me?l.u===me.u:l.u==='ضيف'),last=mine[mine.length-1];
+ $('c1').parentNode.style.display=last?'block':'none';$('c2').parentNode.style.display=last?'block':'none';
+ const em=typeof Chart==='undefined'?'تعذّر تحميل مكتبة الرسوم، تأكد من الاتصال بالإنترنت.':'احسب بصمتك أولًا من قسم الحاسبة لتظهر الرسوم هنا.';
+ $('e1').innerText=$('e2').innerText=last&&typeof Chart!=='undefined'?'':em;
+ if(typeof Chart==='undefined')return;
+ ch1&&ch1.destroy();ch2&&ch2.destroy();
+ const o={responsive:true,maintainAspectRatio:false,locale:'en-US'};
+ if(last)ch1=new Chart($('c1'),{type:'doughnut',data:{labels:Object.keys(last.d),datasets:[{data:Object.values(last.d),backgroundColor:['#f59e0b','#3b82f6','#6b7280','#10b981','#be123c']}]},options:{...o,plugins:{legend:{position:'bottom'}}}});
+ if(mine.length){const sh=mine.slice(-8),off=mine.length-sh.length;
+  ch2=new Chart($('c2'),{type:sh.length<3?'bar':'line',data:{labels:sh.map((l,i)=>'قياس '+(off+i+1)),datasets:[{data:sh.map(l=>l.v),backgroundColor:'#10b981',borderColor:'#059669',borderWidth:3,pointRadius:6,pointBackgroundColor:'#059669',tension:.3,maxBarThickness:60}]},options:{...o,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,title:{display:true,text:'كجم CO₂ شهريًا'}}}}})}
+}
+addEventListener('keydown',e=>{if(e.key==='Escape')['authM','sm'].forEach(i=>$(i).style.display='none')});
+buildQuiz();render();initMap();drawPts();pull();
+if(/Android/i.test(navigator.userAgent)){const w=$('wa');w.href='intent://send/?phone=201025113314#Intent;scheme=whatsapp;package=com.whatsapp;S.browser_fallback_url=https%3A%2F%2Fwa.me%2F201025113314;end';w.removeAttribute('target')}
+if(/^https:\/\//.test(VIDEO_URL)){$('vbox').innerHTML='<iframe src="'+VIDEO_URL+'" title="فيديو المشروع" allowfullscreen style="width:100%;height:340px;border:0;border-radius:18px"></iframe>';$('vid').style.display='block'}
+</script>
+</body>
+</html>
